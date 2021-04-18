@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: ReplaceVars
+      run: |
+        sed -i 's/API_KEY/${TEST_SECRET_KEY}/' index.html
+      env:
+        TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.1
+      with:
+        BRANCH: gh-pages
+        FOLDER: .
